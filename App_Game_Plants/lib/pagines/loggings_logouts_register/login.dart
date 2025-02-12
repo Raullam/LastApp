@@ -170,7 +170,7 @@ class Loggin extends StatelessWidget {
                         btc: 0);
 
                     try {
-                      await usuarisProvider.addUsuari(nouUsuari);
+                      // No agregar el usuario si ya existe
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                             content: Text('Benvingut, ${user.displayName}!')),
@@ -178,13 +178,21 @@ class Loggin extends StatelessWidget {
                       Rutes.navegarHome(context, nouUsuari);
                     } catch (e) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Error al crear l\'usuari')),
+                        SnackBar(content: Text('Error al iniciar sessió')),
                       );
                     }
                   } else {
+                    // L'usuari ja existeix, loguear sense afegir-lo a la base de dades
+                    Usuari usuariExistente = usuarisProvider.usuaris
+                        .firstWhere((u) => u.correu == user.email);
+
+                    // Aquí puedes navegar o realizar cualquier otra acción después del login
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('L\'usuari ja existeix')),
+                      SnackBar(
+                          content:
+                              Text('Benvingut de nou, ${user.displayName}!')),
                     );
+                    Rutes.navegarHome(context, usuariExistente);
                   }
                 }
               },
